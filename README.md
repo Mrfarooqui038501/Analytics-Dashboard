@@ -1,4 +1,4 @@
-# ADmyBRAND Insights – Analytics Dashboard
+# Analytics Dashboard
 
 <div align="center">
   <h3>A modern, visually stunning and fully responsive analytics dashboard built for digital marketing agencies.</h3>
