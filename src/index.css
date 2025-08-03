@@ -119,23 +119,29 @@ header {
   font-size: 1.12rem;
   font-weight: 600;
 }
+
 .table-wrapper {
   background: var(--card);
   border-radius: 12px;
   box-shadow: 0 2px 8px #0001;
   padding: 14px 0 4px 0;
   min-width: 0;
+  /* For mobile responsiveness: overflow-x auto */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .data-table {
   border-collapse: collapse;
   width: 100%;
   font-size: 1.02rem;
+  min-width: 600px; /* allow horizontal scroll on narrow screens */
 }
 .data-table th,
 .data-table td {
   padding: 10px 16px;
   text-align: left;
+  white-space: nowrap; /* prevent text wrapping */
 }
 .data-table th {
   background: var(--bg);
@@ -151,12 +157,14 @@ header {
   background: var(--accent);
   color: #fff;
 }
+
 .table-pagination {
   display: flex;
   justify-content: flex-end;
   padding: 10px 18px 8px 0;
   gap: 14px;
   align-items: center;
+  font-size: 0.9rem;
 }
 .table-pagination button {
   background: var(--accent);
@@ -165,7 +173,7 @@ header {
   border-radius: 7px;
   padding: 4px 13px;
   cursor: pointer;
-  font-size: 1.01rem;
+  font-size: 0.9rem;
   font-weight: 600;
   transition: background 0.2s;
 }
@@ -204,6 +212,7 @@ header {
 }
 
 /* Responsive — keep it neat! */
+
 @media (max-width: 900px) {
   .metrics-cards,
   .charts-grid {
@@ -219,20 +228,75 @@ header {
     gap: 1rem;
   }
 }
+
 @media (max-width: 600px) {
   .dashboard {
-    padding: 10px 2px 20px 2px;
+    padding: 10px 12px 20px 12px;
   }
+
   header .brand {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
-  .card.metric-card {
-    padding: 12px 7px;
+
+  /* Table wrapper horizontal scroll */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
-  .charts-grid {
-    gap: 0.7rem;
+
+  /* Table minimal width and compact padding */
+  .data-table {
+    min-width: 600px;
+  }
+  .data-table th,
+  .data-table td {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+  }
+
+  .table-pagination {
+    font-size: 0.9rem;
+    padding: 8px 12px 8px 12px;
+  }
+
+  .table-pagination button {
+    padding: 3px 10px;
+    font-size: 0.9rem;
+  }
+
+  /* Stack controls above table */
+  .table-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .table-header-controls {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  /* DateRangePicker inputs styling for mobile */
+  .date-range-picker {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .date-range-picker label {
+    flex: 1 1 45%;
+    min-width: 140px;
+  }
+
+  /* Full width export buttons on mobile */
+  .export-btn {
+    width: 100%;
+    padding: 10px 0;
+    border-radius: 6px;
   }
 }
+
 @keyframes skeleton-shine {
   0% {
     background-position: -300px 0;
@@ -242,10 +306,15 @@ header {
   }
 }
 @keyframes skeleton-shine {
-  0% { background-position: -200px 0 }
-  100% { background-position: calc(200px + 100%) 0 }
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
 }
 
+/* Export button styles */
 .export-btn {
   background: var(--accent);
   color: #fff;
@@ -254,10 +323,13 @@ header {
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.16s ease;
 }
 .export-btn:hover {
   background: #484fb7;
 }
+
+/* Date input styles */
 input[type="date"] {
   padding: 3.5px 8px;
   border-radius: 6px;
@@ -265,6 +337,7 @@ input[type="date"] {
   font-size: 1rem;
 }
 
+/* Pagination active page button */
 .table-pagination button.active-page,
 .table-pagination button.active-page:hover {
   background-color: var(--accent);
@@ -286,6 +359,7 @@ input[type="date"] {
   color: #fff;
 }
 
+/* Table header row flex container */
 .table-header-row {
   display: flex;
   justify-content: space-between;
@@ -295,13 +369,14 @@ input[type="date"] {
   flex-wrap: wrap;
 }
 
+/* Controls (date filter + export buttons) container */
 .table-header-controls {
   display: flex;
   gap: 1.1rem;
   align-items: center;
 }
 
-/* DateRangePicker styles */
+/* DateRangePicker style */
 .date-range-picker {
   display: flex;
   gap: 9px;
@@ -344,65 +419,3 @@ body.dark .date-range-picker input[type="date"] {
 .date-range-picker input[type="date"]:focus {
   border: 1.5px solid var(--accent);
 }
-
-/* Container for the table header row */
-.table-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 1.5rem;
-  margin-bottom: 0.5rem;
-  flex-wrap: wrap;
-}
-
-/* Container for date filter and export buttons */
-.table-header-controls {
-  display: flex;
-  gap: 1.1rem;
-  align-items: center;
-}
-
-/* DateRangePicker styling */
-.date-range-picker {
-  display: flex;
-  gap: 9px;
-  align-items: center;
-  border: 1.5px solid var(--accent);
-  border-radius: 7px;
-  padding: 4px 13px 4px 10px;
-  background: linear-gradient(94deg, #e8eeff 40%, #f5f8ff 100%);
-  box-shadow: 0 1.5px 6px #5c6ef911;
-  font-weight: 600;
-}
-
-body.dark .date-range-picker {
-  background: linear-gradient(94deg, #23253b 44%, #252848 100%);
-  border: 1.5px solid var(--muted);
-  box-shadow: 0 1.5px 6px #0003;
-}
-
-.date-range-picker label {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  color: var(--accent);
-  font-size: 0.99rem;
-}
-.date-range-picker input[type="date"] {
-  background: #fff;
-  border: 1.1px solid #b3bde7;
-  outline: none;
-  border-radius: 5px;
-  padding: 2.5px 7px;
-  transition: border 0.17s;
-  font-size: 1rem;
-}
-body.dark .date-range-picker input[type="date"] {
-  background: #b7b8ca;
-  color: #1442d8;
-  border: 1.1px solid #4b50a1;
-}
-.date-range-picker input[type="date"]:focus {
-  border: 1.5px solid var(--accent);
-}
-

@@ -18,16 +18,19 @@ function exportCSV(data, columns) {
   URL.revokeObjectURL(url);
 }
 
-// PDF export function with static imports
+// PDF export function using static imports
 function exportPDF(data, columns) {
   try {
     const doc = new jsPDF();
+
     doc.autoTable({
-      head: [columns.map((c) => c.title)],
-      body: data.map((row) => columns.map((col) => row[col.field])),
+      head: [columns.map(c => c.title)],
+      body: data.map(row => columns.map(col => row[col.field])),
       styles: { fontSize: 8 },
-      headStyles: { fillColor: [92, 110, 249] }, 
+      headStyles: { fillColor: [92, 110, 249] }, // matches --accent color approx (#5c6ef9)
+      margin: { top: 10 },
     });
+
     doc.save("users.pdf");
   } catch (err) {
     console.error("Error generating PDF:", err);
