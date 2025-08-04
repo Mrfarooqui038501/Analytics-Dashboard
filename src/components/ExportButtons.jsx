@@ -1,51 +1,37 @@
 import React from "react";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";   // ← named import works with Vite/ESM
 
-// CSV export function
+// CSV export (unchanged)
 function exportCSV(data, columns) {
+  if (!data.length) return alert("Nothing to export");
   const header = columns.map(c => c.title).join(",");
-  const rows = data.map(row =>
-    columns.map(col => `"${row[col.field] || ""}"`).join(",")
-  );
-  const csv = [header, ...rows].join("\n");
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "users.csv";
-  link.click();
+  const rows   = data.map(r => columns.map(c => `"${(r[c.field] ?? "").toString().replace(/"/g, '""')}"`).join(","));
+  const blob   = new Blob([[header, ...rows].join("\n")], { type: "text/csv" });
+  const url    = URL.createObjectURL(blob);
+  Object.assign(document.createElement("a"), { href: url, download: "users.csv" }).click();
   URL.revokeObjectURL(url);
 }
 
-// PDF export function using static imports
+// PDF export
 function exportPDF(data, columns) {
-  try {
-    const doc = new jsPDF();
-
-    doc.autoTable({
-      head: [columns.map(c => c.title)],
-      body: data.map(row => columns.map(col => row[col.field])),
-      styles: { fontSize: 8 },
-      headStyles: { fillColor: [92, 110, 249] }, // matches --accent color approx (#5c6ef9)
-      margin: { top: 10 },
-    });
-
-    doc.save("users.pdf");
-  } catch (err) {
-    console.error("Error generating PDF:", err);
-  }
+  if (!columns.length) return alert("No columns defined");
+  const doc = new jsPDF();
+  autoTable(doc, {                          // ← call autoTable as a function
+    head: [columns.map(c => c.title)],
+    body: data.length ? data.map(r => columns.map(c => r[c.field] ?? "")) : [["-"]],
+    styles: { fontSize: 8 },
+    headStyles: { fillColor: [92, 110, 249] },
+    margin: { top: 10 },
+  });
+  doc.save("users.pdf");
 }
 
 export default function ExportButtons({ data, columns }) {
   return (
     <div style={{ display: "flex", gap: 12, marginBottom: 7 }}>
-      <button className="export-btn" onClick={() => exportCSV(data, columns)}>
-        Export CSV
-      </button>
-      <button className="export-btn" onClick={() => exportPDF(data, columns)}>
-        Export PDF
-      </button>
+      <button className="export-btn" onClick={() => exportCSV(data, columns)}>Export CSV</button>
+      <button className="export-btn" onClick={() => exportPDF(data, columns)}>Export PDF</button>
     </div>
   );
 }

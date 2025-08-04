@@ -384,8 +384,8 @@ input[type="date"] {
   border: 1.5px solid var(--accent);
   border-radius: 7px;
   padding: 4px 13px 4px 10px;
-  background: linear-gradient(94deg, #e8eeff 40%, #f5f8ff 100%);
-  box-shadow: 0 1.5px 6px #5c6ef911;
+  background: linear-gradient(94deg, #323141 40%, #f5f8ff 100%);
+  box-shadow: 0 1.5px 6px #111c6d11;
   font-weight: 600;
 }
 
